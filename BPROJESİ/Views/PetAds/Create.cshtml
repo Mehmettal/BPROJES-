@@ -1,0 +1,43 @@
+﻿@model BPROJESİ.Models.PetAd
+
+<h2>Yeni İlan Ekle</h2>
+
+<form id="petAdForm">
+    <label>Başlık:</label>
+    <input type="text" name="Title" />
+    <br />
+    <label>Açıklama:</label>
+    <textarea name="Description"></textarea>
+    <br />
+    <button type="submit">Kaydet</button>
+</form>
+
+<div id="result"></div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#petAdForm').submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("Create", "PetAds")',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            $('#result').html('<p style="color:green;">İlan başarıyla kaydedildi.</p>');
+                            $('#petAdForm')[0].reset();
+                        } else {
+                            $('#result').html('<p style="color:red;">Hata: ' + response.errors.join(', ') + '</p>');
+                        }
+                    },
+                    error: function () {
+                        $('#result').html('<p style="color:red;">Sunucu hatası oluştu.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - HAYTİC</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/css/adminlte.min.css" />
+    <!-- Custom CSS -->
+    <style>
+        .pet-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+            .pet-card img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+            }
+
+        .pet-card-body {
+            padding: 15px;
+        }
+
+        .pet-category img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .hero-section {
+            padding: 50px 0;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-light-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="/Home/Index" class="brand-link">
+                <img src="/dist/img/haytic.jpg" alt="HAYTİC Logo" class="brand-image img-circle elevation-3" style="opacity: .8" />
+                <span class="brand-text font-weight-bold">HAYTİC</span>
+            </a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="@Url.Action("Index", "Home")" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>Ana Sayfa</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Cart", "Cart")" class="nav-link">
+                                <i class="nav-icon fas fa-shopping-cart"></i>
+                                <p>Sepet</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    İşlemler
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Kategoriler", "Kategori")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Kategoriler</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("ILAN", "sahiplendir")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Sahiplendir</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Kullanıcılar", "Kullanıcı")" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Kullanıcı Ekle</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Kullanıcılar", "Kullanıcı")" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Kullanıcılar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Profile", "User")" class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>Profilim</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <strong><a href="/Home/Index">HAYTİC</a></strong>
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Bir Dost Edin</b>
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark"></aside>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- AdminLTE JS -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/js/adminlte.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

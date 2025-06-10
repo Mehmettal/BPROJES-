@@ -1,0 +1,148 @@
+﻿@{
+    Layout = null; // Bu sayfanın kendi layout'u olmayacak
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HAYTİC - Hoş Geldiniz</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: url('/images/pets-background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        .btn-action {
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+            .btn-action i {
+                margin-right: 10px;
+            }
+
+        .btn-skip {
+            background: transparent;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+        }
+
+            .btn-skip:hover {
+                background: #f8f9fa;
+            }
+
+        .brand-logo {
+            max-height: 80px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="welcome-card text-center">
+            <img src="/dist/img/haytic.jpg" alt="HAYTİC Logo" class="brand-logo">
+            <h2 class="mb-4">Evcil Dostunu Bul!</h2>
+            <p class="mb-4">Hayvan sahiplenme ve satış platformuna hoş geldiniz</p>
+
+            <div class="d-grid gap-2">
+                <a href="/kayit/kayit" class="btn btn-primary btn-action">
+                    <i class="fas fa-user-plus"></i> Kaydol
+                </a>
+
+                <a href="#" class="btn btn-success btn-action" data-toggle="modal" data-target="#loginModal">
+                    <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                </a>
+                <a href="/Anasayfa/Anasayfa" class="btn btn-skip btn-action">
+                    <i class="fas fa-arrow-right"></i> Misafir Olarak Devam Et
+                </a>
+            </div>
+        </div>
+
+        @{
+            ViewData["Title"] = "Ana Sayfa";
+            Layout = "_Layout"; // Layout'unuz neyse onu belirtin
+        }
+
+        <!-- Ana sayfa içeriği burada -->
+        <!-- Giriş Modalı (Index sayfasının en altına ekleyin) -->
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                        </h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="indexLoginForm">
+                            <div class="form-group">
+                                <label for="indexUsername">Kullanıcı Adı</label>
+                                <input type="text" class="form-control" id="indexUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="indexPassword">Şifre</label>
+                                <input type="password" class="form-control" id="indexPassword" required>
+                            </div>
+                            <div class="form-group text-right">
+                                <a href="#" class="text-success" data-toggle="modal" data-target="#forgotPasswordModal" data-dismiss="modal">
+                                    <i class="fas fa-question-circle"></i> Şifremi Unuttum
+                                </a>
+                            </div>
+                                <button type="submit" class="btn btn-success btn-block">
+                                    <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                                </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Şifremi Unuttum Modalı -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        [...Şifremi unuttum modal içeriği...]
+    </div>
+
+    @section Scripts {
+        <script>
+            // Sadece bu sayfada çalışacak JS kodları
+            $(document).ready(function() {
+                $('#indexLoginForm').submit(function(e) {
+                    e.preventDefault();
+                    // Giriş işlemleri
+                    console.log("Index sayfasından giriş yapılıyor");
+                });
+            });
+        </script>
+    }
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

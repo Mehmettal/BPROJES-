@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Kullanıcı Profili";
+}
+
+<h2>Kullanıcı Profili</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Kullanıcı Adı:</strong> <span id="username"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Telefon:</strong> <span id="phone"></span></p>
+        <p><strong>Ad:</strong> <span id="firstname"></span></p>
+        <p><strong>Soyad:</strong> <span id="lastname"></span></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '/User/GetProfileJson',
+                method: 'GET',
+                success: function (data) {
+                    $('#username').text(data.userName);
+                    $('#email').text(data.email);
+                    $('#phone').text(data.phoneNumber);
+                    $('#firstname').text(data.firstName ?? "Belirtilmedi");
+                    $('#lastname').text(data.lastName ?? "Belirtilmedi");
+                },
+                error: function () {
+                    alert("Kullanıcı bilgileri alınamadı.");
+                }
+            });
+        });
+    </script>
+}

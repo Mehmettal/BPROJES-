@@ -1,0 +1,56 @@
+﻿@model List<BPROJESİ.Models.PetAd>
+
+@{
+    ViewData["Title"] = "Pet Ads List";
+}
+
+<h2>Pet Ads List</h2>
+
+<div id="ad-list">
+    <p>Yükleniyor...</p>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetPetAds", "PetAds")',
+                type: 'GET',
+                success: function (ads) {
+                    let html = '';
+
+                    if (ads.length === 0) {
+                        html = '<p>Hiç ilan bulunamadı.</p>';
+                    } else {
+                        ads.forEach(function (ad) {
+                            const firstPhoto = (ad.photoPaths && ad.photoPaths.split(',')[0]) || '/images/default.jpg';
+
+                            html += `
+                            <div class="card mb-3">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <img src="${firstPhoto}" class="img-fluid" alt="İlan Fotoğrafı" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${ad.adTitle}</h5>
+                                            <p class="card-text"><strong>Tür:</strong> ${ad.petType} - <strong>Cinsiyet:</strong> ${ad.gender}</p>
+                                            <p class="card-text"><strong>Açıklama:</strong> ${ad.description}</p>
+                                            <p class="card-text"><small class="text-muted">${ad.city} / ${ad.district}</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                    }
+
+                    $('#ad-list').html(html);
+                },
+                error: function () {
+                    $('#ad-list').html('<p class="text-danger">İlanlar yüklenirken hata oluştu.</p>');
+                }
+            });
+        });
+    </script>
+}

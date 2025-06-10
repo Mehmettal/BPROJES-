@@ -1,0 +1,26 @@
+﻿@model List<BPROJESİ.Models.Product>
+
+@{
+    ViewData["Title"] = "Ürünler";
+}
+
+<h2 class="mb-4">Ürünler</h2>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Price.ToString("C")</p>
+                    <form asp-controller="Sepet" asp-action="Ekle" method="post">
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <button type="submit" class="btn btn-success btn-block">Sepete Ekle</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

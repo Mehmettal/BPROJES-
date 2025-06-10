@@ -1,0 +1,277 @@
+﻿<!-- Content Header -->
+<div class="wrapper">
+    <div class="content-wrapper">
+        <!-- Sayfa Başlığı ve Breadcrumb -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-10 col-lg-8 mx-auto">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h1>Yeni İlan Oluştur</h1>
+                            <ol class="breadcrumb float-sm-right mb-0">
+                                <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                                <li class="breadcrumb-item active">İlan Ver</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-10 col-lg-8 mx-auto">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-paw"></i> Evcil Dostunu Sahiplendir</h3>
+                            </div>
+                            <!-- Form Başlangıç -->
+                            <form id="createAdForm" asp-action="CreateAd" method="post" enctype="multipart/form-data">
+
+                                <div class="card-body">
+                                    <!-- Temel Bilgiler -->
+                                    <div class="form-group">
+                                        <label for="AdTitle">İlan Başlığı*</label>
+                                        <input type="text" class="form-control" id="AdTitle" name="AdTitle" placeholder="Örnek: British Shorthair Yavru Sahiplendirilecek" required>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="PetType">Hayvan Türü*</label>
+                                                <select class="form-control" id="PetType" name="PetType" required>
+                                                    <option value="">Seçiniz</option>
+                                                    <option value="Kedi">Kedi</option>
+                                                    <option value="Köpek">Köpek</option>
+                                                    <option value="Kuş">Kuş</option>
+                                                    <option value="Balık">Balık</option>
+                                                    <option value="Kemirgen">Kemirgen</option>
+                                                    <option value="Diğer">Diğer</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Breed">Cins/İrk</label>
+                                                <input type="text" class="form-control" id="Breed" name="Breed" placeholder="Örnek: British Shorthair">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hayvan Özellikleri -->
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Gender">Cinsiyet*</label>
+                                                <select class="form-control" id="Gender" name="Gender" required>
+                                                    <option value="">Seçiniz</option>
+                                                    <option value="Erkek">Erkek</option>
+                                                    <option value="Dişi">Dişi</option>
+                                                    <option value="Bilinmiyor">Bilinmiyor</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Age">Yaş*</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" id="Age" name="Age" min="0" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">Ay</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Size">Boyut (Köpekler için)</label>
+                                                <select class="form-control" id="Size" name="Size">
+                                                    <option value="">Seçiniz</option>
+                                                    <option value="Küçük">Küçük (0-10 kg)</option>
+                                                    <option value="Orta">Orta (11-25 kg)</option>
+                                                    <option value="Büyük">Büyük (26+ kg)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sağlık Bilgileri -->
+                                    <div class="form-group">
+                                        <label>Sağlık Durumu*</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="Vaccinated" name="Vaccinated">
+                                            <label class="form-check-label" for="Vaccinated">Aşıları Tam</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="Sterilized" name="Sterilized">
+                                            <label class="form-check-label" for="Sterilized">Kısırlaştırılmış</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="Microchipped" name="Microchipped">
+                                            <label class="form-check-label" for="Microchipped">Mikroçipli</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Konum ve İletişim -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="City">Şehir*</label>
+                                                <select class="form-control" id="City" name="City" required>
+                                                    <option value="">Seçiniz</option>
+                                                    <option value="İstanbul">İstanbul</option>
+                                                    <option value="Ankara">Ankara</option>
+                                                    <!-- Diğer şehirler -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="District">İlçe*</label>
+                                                <input type="text" class="form-control" id="District" name="District" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fiyat ve İlan Türü -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="AdType">İlan Türü*</label>
+                                                <select class="form-control" id="AdType" name="AdType" required>
+                                                    <option value="">Seçiniz</option>
+                                                    <option value="Sahiplendirme">Ücretsiz Sahiplendirme</option>
+                                                    <option value="Satılık">Satılık</option>
+                                                    <option value="Çiftleşme">Çiftleşme İlanı</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Price">Fiyat (TL)</label>
+                                                <input type="number" class="form-control" id="Price" name="Price" min="0" placeholder="Ücretsiz ise boş bırakın">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Fotoğraf Yükleme -->
+                                    <div class="form-group">
+                                        <label for="Photos">Fotoğraflar* (Maksimum 5 adet)</label>
+                                        <input type="file" class="form-control-file" id="Photos" name="Photos" multiple accept="image/*" required>
+                                        <small class="form-text text-muted">Hayvanın net göründüğü fotoğraflar ekleyin</small>
+                                    </div>
+
+                                    <!-- Açıklama -->
+                                    <div class="form-group">
+                                        <label for="Description">Açıklama*</label>
+                                        <textarea class="form-control" id="Description" name="Description" rows="5" required
+                                                  placeholder="Hayvanın özellikleri, karakteri, özel ihtiyaçları vb."></textarea>
+                                    </div>
+
+                                    <!-- İletişim Bilgileri -->
+                                    <div class="form-group">
+                                        <label for="ContactPhone">İletişim Telefonu*</label>
+                                        <input type="tel" class="form-control" id="ContactPhone" name="ContactPhone" placeholder="05xx xxx xx xx" required>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-check-circle"></i> İlanı Yayınla
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card-success {
+            border-top: 3px solid #28a745;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2E8B57;
+        }
+
+        .form-check-label {
+            font-weight: normal;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // İlan türüne göre fiyat alanını ayarla
+            $('#AdType').change(function() {
+                if ($(this).val() === 'Sahiplendirme') {
+                    $('#Price').val('0').prop('disabled', true);
+                } else {
+                    $('#Price').prop('disabled', false);
+                }
+            });
+
+            // Şehir seçince ilçe önerileri (Örnek)
+            $('#City').change(function() {
+                var city = $(this).val();
+                // Burada AJAX ile ilçe listesi çekilebilir
+                console.log("Seçilen şehir: " + city);
+            });
+
+            // ** AJAX form gönderme **
+            $('#createAdForm').submit(function(e) {
+                e.preventDefault();  // Formun normal submitini durdur
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),  // Formun asp-action adresi
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if(response.success) {
+                            alert('İlanınız başarıyla eklendi!');
+                            window.location.href = '/';  // İstersen başka sayfaya yönlendir
+                        } else {
+                            alert('Hata: ' + (response.errors ? response.errors.join(', ') : 'Bilinmeyen hata'));
+                        }
+                    },
+                    error: function() {
+                        alert('Sunucu hatası oluştu.');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // İlan türüne göre fiyat alanını ayarla
+            $('#AdType').change(function() {
+                if ($(this).val() === 'Sahiplendirme') {
+                    $('#Price').val('0').prop('disabled', true);
+                } else {
+                    $('#Price').prop('disabled', false);
+                }
+            });
+
+            // Şehir seçince ilçe önerileri (Örnek)
+            $('#City').change(function() {
+                var city = $(this).val();
+                // Burada AJAX ile ilçe listesi çekilebilir
+                console.log("Seçilen şehir: " + city);
+            });
+        });
+    </script>
+}
