@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿//using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BPROJESİ.Models;  // ApplicationUser modeli buradaysa
 using BPROJESİ.Models; // RegisterViewModel varsa buradaysa
 
-
+/*
 public class KayitController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -19,9 +19,6 @@ public class KayitController : Controller
     {
         return View();
     }
-
-
-
 
     [HttpPost]
     public async Task<IActionResult> kayit(RegisterViewModel model)
@@ -47,7 +44,5 @@ public class KayitController : Controller
 
         return View(model);
     }
-
-
-
 }
+*/

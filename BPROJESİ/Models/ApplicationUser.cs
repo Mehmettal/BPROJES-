@@ -3,20 +3,12 @@ using System;
 
 namespace BPROJESİ.Models
 {
-   
-
     public class ApplicationUser : IdentityUser
     {
-        public DateTime CreatedDate { get; set; }  // Buraya ekle
-        public string? Ad { get; set; }
-        public string? Soyad { get; set; }
-        public DateTime? KayitTarihi { get; set; }  
-        public DateTime BirthDate { get; set; }
-        
-
-
-        // İstediğin diğer özel alanlar...
+        public string FirstName { get; set; }  // İsim
+        public string LastName { get; set; }   // Soyisim
+        public DateTime? BirthDate { get; set; }
+        // Doğum tarihi
+        // İstersen telefon numarası ve e-posta IdentityUser'da zaten var, tekrar eklemeye gerek yok.
     }
-
-
 }

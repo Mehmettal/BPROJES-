@@ -6,13 +6,16 @@ namespace BPROJESİ.Models
     public class CartItem
     {
         public int Id { get; set; }
-        public int ProductId { get; set; }
+        public int ProductId { get; set; } // Bu alan null gelebilir mi?
         public string ProductName { get; set; }
         public decimal ProductPrice { get; set; }
         public int Quantity { get; set; }
         public string ImageUrl { get; set; }
-        public Product Product { get; set; }
+        public string UserName { get; set; }
+        public Product? Product { get; set; }
     }
+
+
 
     public class CartViewModel
     {

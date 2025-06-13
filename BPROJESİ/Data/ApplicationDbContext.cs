@@ -11,17 +11,24 @@ namespace BPROJESİ.Data
             : base(options)
         {
         }
-        public DbSet<User> Users { get; set; }
-
+     
 
         public DbSet<Product> Products { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
         public DbSet<PetAd> PetAds { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PetAd>(entity =>
+            {
+                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
+            });
+
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
@@ -30,8 +37,17 @@ namespace BPROJESİ.Data
                 .Property(c => c.ProductPrice)
                 .HasColumnType("decimal(18,2)");
 
+            // ApplicationUser kolon eşlemesi:
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
+                entity.Property(e => e.FirstName).HasColumnName("Ad");
+                entity.Property(e => e.LastName).HasColumnName("Soyad");
+                entity.Property(e => e.BirthDate).HasColumnName("BirthDate");
+            });
+
             base.OnModelCreating(modelBuilder);
         }
+
 
     }
 }

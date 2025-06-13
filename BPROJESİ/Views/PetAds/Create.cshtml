@@ -2,7 +2,8 @@
 
 <h2>Yeni İlan Ekle</h2>
 
-<form id="petAdForm">
+<form id="petAdForm" enctype="multipart/form-data">
+
     <label>Başlık:</label>
     <input type="text" name="Title" />
     <br />
@@ -21,10 +22,15 @@
             $('#petAdForm').submit(function (e) {
                 e.preventDefault();
 
+                var form = $('#petAdForm')[0];
+                var data = new FormData(form);
+
                 $.ajax({
                     url: '@Url.Action("Create", "PetAds")',
                     type: 'POST',
-                    data: $(this).serialize(),
+                    data: data,
+                    processData: false, // ÖNEMLİ: FormData için false
+                    contentType: false, // ÖNEMLİ: FormData için false
                     success: function (response) {
                         if (response.success) {
                             $('#result').html('<p style="color:green;">İlan başarıyla kaydedildi.</p>');

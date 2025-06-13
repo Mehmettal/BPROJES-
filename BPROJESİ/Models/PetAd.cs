@@ -17,12 +17,13 @@
         public string District { get; set; }
         public string AdType { get; set; }
         public decimal? Price { get; set; }
-        public string PhotoUrls { get; set; } // Fotoğraf url'leri virgülle ayrılmış string olarak saklanacak
         public string Description { get; set; }
         public string ContactPhone { get; set; }
-
         public string? PhotoPaths { get; set; } // Virgülle ayrılmış fotoğraf yolları
-
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        // --- BURAYA EKLE ---
+        public string UserId { get; set; }   // Kullanıcıya ait alan!
     }
 }
+    

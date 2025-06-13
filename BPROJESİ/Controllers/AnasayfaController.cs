@@ -1,11 +1,10 @@
-﻿namespace BPROJESİ.Controllers
-{
-    using Microsoft.AspNetCore.Mvc;
-    using BPROJESİ.Models;  // Product modeli burada tanımlı
-    using System.Linq;
-    using System;
-    using BPROJESİ.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using BPROJESİ.Models;
+using System.Linq;
+using BPROJESİ.Data;
 
+namespace BPROJESİ.Controllers
+{
     public class AnasayfaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,22 +14,30 @@
             _context = context;
         }
 
+        // Ana sayfa view
         public IActionResult Anasayfa()
         {
-            var products = _context.Products.ToList(); // Veritabanından ürünleri al
-            return View(products); // View'e gönder
+            var petAds = _context.PetAds.ToList();
+            return View(petAds);
         }
+
+        // Ana sayfada JS ile çekilen ilanları döner
         [HttpGet]
         public IActionResult GetCats()
         {
-            var pets = _context.Products.Select(p => new
-            {
-                id = p.Id,
-                name = p.Name,
-                price = p.Price,
-                imageUrl = p.ImageUrl,
-                description = p.Description
-            }).ToList();
+            var pets = _context.PetAds
+                .ToList()
+                .Select(p => new
+                {
+                    id = p.Id,
+                    name = p.AdTitle ?? "",
+                    price = p.Price ?? 0,
+                    imageUrl = !string.IsNullOrEmpty(p.PhotoPaths)
+                        ? p.PhotoPaths.Split(',')[0]
+                        : "/images/default.jpg",
+                    description = p.Description ?? "",
+                    userId = p.UserId ?? ""   // <-- EKLEDİK!
+                }).ToList();
 
             return Json(pets);
         }

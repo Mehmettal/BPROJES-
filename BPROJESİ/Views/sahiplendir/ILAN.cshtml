@@ -28,7 +28,8 @@
                                 <h3 class="card-title"><i class="fas fa-paw"></i> Evcil Dostunu Sahiplendir</h3>
                             </div>
                             <!-- Form Başlangıç -->
-                            <form id="createAdForm" asp-action="CreateAd" method="post" enctype="multipart/form-data">
+                            <form id="createAdForm" asp-controller="PetAds" asp-action="Create" method="post" enctype="multipart/form-data">
+
 
                                 <div class="card-body">
                                     <!-- Temel Bilgiler -->
@@ -101,15 +102,15 @@
                                     <div class="form-group">
                                         <label>Sağlık Durumu*</label>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="Vaccinated" name="Vaccinated">
+                                            <input class="form-check-input" type="checkbox" id="Vaccinated" name="Vaccinated" value="true">
                                             <label class="form-check-label" for="Vaccinated">Aşıları Tam</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="Sterilized" name="Sterilized">
+                                            <input class="form-check-input" type="checkbox" id="Sterilized" name="Sterilized" value="true">
                                             <label class="form-check-label" for="Sterilized">Kısırlaştırılmış</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="Microchipped" name="Microchipped">
+                                            <input class="form-check-input" type="checkbox" id="Microchipped" name="Microchipped" value="true">
                                             <label class="form-check-label" for="Microchipped">Mikroçipli</label>
                                         </div>
                                     </div>
@@ -242,7 +243,7 @@
                     success: function(response) {
                         if(response.success) {
                             alert('İlanınız başarıyla eklendi!');
-                            window.location.href = '/';  // İstersen başka sayfaya yönlendir
+                            window.location.href = '/Anasayfa/Anasayfa';  // İstersen başka sayfaya yönlendir
                         } else {
                             alert('Hata: ' + (response.errors ? response.errors.join(', ') : 'Bilinmeyen hata'));
                         }

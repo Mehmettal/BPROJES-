@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Ödeme";
+}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow p-4">
+                <h4 class="mb-4">Ödeme Seçenekleri</h4>
+                <form id="odemeForm">
+                    <div class="mb-3">
+                        <label class="form-label"><b>Ad Soyad</b></label>
+                        <input type="text" class="form-control" name="adSoyad" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><b>Teslimat Adresi</b></label>
+                        <textarea class="form-control" name="adres" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><b>Ödeme Türü</b></label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="odemeTuru" id="krediKarti" value="Kredi Kartı" checked>
+                            <label class="form-check-label" for="krediKarti">Kredi Kartı</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="odemeTuru" id="kapida" value="Kapıda Ödeme">
+                            <label class="form-check-label" for="kapida">Kapıda Ödeme</label>
+                        </div>
+                    </div>
+                    <div id="krediKartiBilgileri">
+                        <div class="mb-3">
+                            <label class="form-label">Kart Numarası</label>
+                            <input type="text" class="form-control" name="kartNo" maxlength="19" placeholder="XXXX XXXX XXXX XXXX">
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Son Kullanma Tarihi</label>
+                                <input type="text" class="form-control" name="sonKullanma" maxlength="5" placeholder="AA/YY">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-control" name="cvv" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Onayla ve Bitir</button>
+                    </div>
+                    <div id="odemeSonuc" class="mt-3"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Ödeme türüne göre kart bilgilerini gizle/göster
+        document.querySelectorAll('input[name="odemeTuru"]').forEach(function (el) {
+            el.addEventListener('change', function () {
+                if (this.value === "Kredi Kartı") {
+                    document.getElementById('krediKartiBilgileri').style.display = "";
+                } else {
+                    document.getElementById('krediKartiBilgileri').style.display = "none";
+                }
+            });
+        });
+
+        // Sayfa ilk açıldığında kredi kartı bölümü aktif
+        document.getElementById('krediKartiBilgileri').style.display = "";
+
+        // Form submit işlemi
+        document.getElementById('odemeForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            fetch('/Odeme/Onayla', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('odemeSonuc').innerHTML =
+                        '<div class="alert alert-success">Siparişiniz onaylandı 🎉</div>';
+                    // Sepeti temizle, ana sayfaya yönlendirme, vs. eklenebilir
+                } else {
+                    document.getElementById('odemeSonuc').innerHTML =
+                        '<div class="alert alert-danger">' + (data.message || "Bir hata oluştu!") + '</div>';
+                }
+            });
+        });
+    </script>
+}

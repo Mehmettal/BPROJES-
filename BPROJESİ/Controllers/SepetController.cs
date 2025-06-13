@@ -1,53 +1,135 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BPROJESİ.Data;
 using BPROJESİ.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System;
-using BPROJESİ.Data;
+using System.Threading.Tasks;
 
 public class SepetController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public SepetController(ApplicationDbContext context)
+    public SepetController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
-
     [HttpPost]
-    public IActionResult Ekle(int productId)
+    public async Task<IActionResult> SepeteEkle([FromBody] CartAddRequest model)
     {
-        var product = _context.Products.FirstOrDefault(p => p.Id == productId);
-        if (product == null)
-        {
-            return NotFound();
-        }
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
 
-        var existingItem = _context.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+        if (model == null || model.ProductId == 0)
+            return BadRequest(new { success = false, message = "Geçersiz ürün!" });
 
-        if (existingItem != null)
+        var mevcut = _context.CartItems
+            .FirstOrDefault(c => c.UserName == user.UserName && c.ProductId == model.ProductId);
+
+        if (mevcut != null)
         {
-            existingItem.Quantity++;
+            mevcut.Quantity += model.Quantity;
         }
         else
         {
-            var newItem = new CartItem
+            _context.CartItems.Add(new CartItem
             {
-                ProductId = product.Id,
-                ProductName = product.Name,
-                ProductPrice = product.Price,
-                Quantity = 1,
-                ImageUrl = product.ImageUrl
-            };
-            _context.CartItems.Add(newItem);
+                UserName = user.UserName,
+                ProductId = model.ProductId,
+                ProductName = model.Name,
+                ProductPrice = model.Price,
+                Quantity = model.Quantity,
+                ImageUrl = model.ImageUrl
+            });
         }
 
-        _context.SaveChanges();
-        return RedirectToAction("Sepetim");
+        await _context.SaveChangesAsync();
+        return Json(new { success = true });
     }
 
+
+
+    [HttpGet]
     public IActionResult Sepetim()
     {
-        var cartItems = _context.CartItems.ToList();
-        return View(cartItems);
+        return View();
     }
+
+    // Sepetteki ürünleri JSON döner
+    [HttpGet]
+    public async Task<IActionResult> GetCartItems()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        var sepet = _context.CartItems
+            .Where(c => c.UserName == user.UserName)
+            .Select(c => new
+            {
+                id = c.Id,
+                productName = c.ProductName,
+                quantity = c.Quantity,
+                productPrice = c.ProductPrice,
+                imageUrl = c.ImageUrl
+            })
+            .ToList();
+
+        return Json(sepet);
+    }
+
+    // Adet güncelle
+    [HttpPost]
+    public async Task<IActionResult> GuncelleAdet([FromBody] CartQuantityUpdateModel model)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        var item = _context.CartItems.FirstOrDefault(c => c.Id == model.Id && c.UserName == user.UserName);
+        if (item == null) return NotFound();
+
+        item.Quantity += model.Degisim;
+        if (item.Quantity < 1)
+        {
+            _context.CartItems.Remove(item);
+        }
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    // Ürün sil
+    [HttpPost]
+    public async Task<IActionResult> Sil([FromBody] CartDeleteModel model)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        var item = _context.CartItems.FirstOrDefault(c => c.Id == model.Id && c.UserName == user.UserName);
+        if (item == null) return NotFound();
+
+        _context.CartItems.Remove(item);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    // (İsteğe bağlı) Sepeti onayla, ödeme ekranına yönlendir
+    [HttpPost]
+    public IActionResult SepetiOnayla()
+    {
+        // Burada ödeme ekranına yönlendirebilirsin.
+        return Json(new { success = true, redirectUrl = Url.Action("Odeme", "Odeme") });
+    }
+}
+
+// Modeller
+public class CartQuantityUpdateModel
+{
+    public int Id { get; set; }
+    public int Degisim { get; set; }
+}
+public class CartDeleteModel
+{
+    public int Id { get; set; }
 }

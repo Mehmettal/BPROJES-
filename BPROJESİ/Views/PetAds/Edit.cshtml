@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "İlanı Düzenle";
+}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div id="editResult"></div>
+            <form id="editAdForm" autocomplete="off">
+                <input type="hidden" id="Id" name="Id" />
+                <div class="mb-3">
+                    <label class="form-label">İlan Başlığı</label>
+                    <input type="text" class="form-control" id="AdTitle" name="AdTitle" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Hayvan Türü</label>
+                    <input type="text" class="form-control" id="PetType" name="PetType" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cins</label>
+                    <input type="text" class="form-control" id="Breed" name="Breed">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cinsiyet</label>
+                    <input type="text" class="form-control" id="Gender" name="Gender">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Yaş (Ay)</label>
+                    <input type="number" class="form-control" id="Age" name="Age">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Boyut</label>
+                    <input type="text" class="form-control" id="Size" name="Size">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Aşılı</label>
+                    <input type="checkbox" id="Vaccinated" name="Vaccinated">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kısırlaştırılmış</label>
+                    <input type="checkbox" id="Sterilized" name="Sterilized">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mikroçipli</label>
+                    <input type="checkbox" id="Microchipped" name="Microchipped">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Şehir</label>
+                    <input type="text" class="form-control" id="City" name="City">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">İlçe</label>
+                    <input type="text" class="form-control" id="District" name="District">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">İlan Türü</label>
+                    <input type="text" class="form-control" id="AdType" name="AdType">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fiyat</label>
+                    <input type="number" class="form-control" id="Price" name="Price">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Açıklama</label>
+                    <textarea class="form-control" id="Description" name="Description"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Telefon</label>
+                    <input type="text" class="form-control" id="ContactPhone" name="ContactPhone">
+                </div>
+                <button type="submit" class="btn btn-success">Güncelle</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // URL'den id çek
+        function getIdFromUrl() {
+            var path = window.location.pathname;
+            var id = path.split('/').pop();
+            return parseInt(id);
+        }
+
+        $(document).ready(function () {
+            var adId = getIdFromUrl();
+
+            // Sayfa ilk açıldığında ilan detaylarını çekip forma yaz
+            $.get('/PetAds/GetAdEdit', { id: adId }, function (response) {
+                if (!response.success) {
+                    $('#editResult').html('<div class="alert alert-danger">' + response.message + '</div>');
+                    $('#editAdForm').hide();
+                    return;
+                }
+                var ad = response.data;
+                $('#Id').val(ad.id);
+                $('#AdTitle').val(ad.adTitle);
+                $('#PetType').val(ad.petType);
+                $('#Breed').val(ad.breed);
+                $('#Gender').val(ad.gender);
+                $('#Age').val(ad.age);
+                $('#Size').val(ad.size);
+                $('#Vaccinated').prop('checked', ad.vaccinated);
+                $('#Sterilized').prop('checked', ad.sterilized);
+                $('#Microchipped').prop('checked', ad.microchipped);
+                $('#City').val(ad.city);
+                $('#District').val(ad.district);
+                $('#AdType').val(ad.adType);
+                $('#Price').val(ad.price);
+                $('#Description').val(ad.description);
+                $('#ContactPhone').val(ad.contactPhone);
+            });
+
+            // Form submit - AJAX güncelleme
+            $('#editAdForm').on('submit', function (e) {
+                e.preventDefault();
+
+                var adData = {
+                    Id: $('#Id').val(),
+                    AdTitle: $('#AdTitle').val(),
+                    PetType: $('#PetType').val(),
+                    Breed: $('#Breed').val(),
+                    Gender: $('#Gender').val(),
+                    Age: parseInt($('#Age').val()),
+                    Size: $('#Size').val(),
+                    Vaccinated: $('#Vaccinated').is(':checked'),
+                    Sterilized: $('#Sterilized').is(':checked'),
+                    Microchipped: $('#Microchipped').is(':checked'),
+                    City: $('#City').val(),
+                    District: $('#District').val(),
+                    AdType: $('#AdType').val(),
+                    Price: parseFloat($('#Price').val()),
+                    Description: $('#Description').val(),
+                    ContactPhone: $('#ContactPhone').val()
+                };
+
+                $.ajax({
+                    url: '/PetAds/EditAd',
+                    type: 'POST',
+                    data: JSON.stringify(adData),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#editResult').html('<div class="alert alert-success">Güncellendi!</div>');
+                        } else {
+                            $('#editResult').html('<div class="alert alert-danger">' + response.message + '</div>');
+                        }
+                    },
+                    error: function () {
+                        $('#editResult').html('<div class="alert alert-danger">Sunucu hatası.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+
+}

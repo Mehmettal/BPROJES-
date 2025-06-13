@@ -1,0 +1,179 @@
+﻿@{
+    ViewData["Title"] = "Sepetim";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <!-- Ürün Kartları -->
+        <div class="col-lg-8" id="cartItemsContainer">
+            <!-- JS ile dinamik ürün kartları buraya eklenecek -->
+        </div>
+
+        <!-- Sipariş Özeti -->
+        <div class="col-lg-4">
+            <div class="summary-box shadow">
+                <h5 class="mb-3">Sipariş Özeti</h5>
+                <p>Ürünün Toplamı: <span id="urunToplami">₺0,00</span></p>
+                <p>Kargo: <span>₺0,00</span></p>
+                <hr />
+                <p><strong>Toplam: <span id="toplamTutar">₺0,00</span></strong></p>
+                <button class="btn btn-green w-100 mt-3" id="sepetiOnaylaBtn">Sepeti Onayla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STİL -->
+<style>
+    body {
+        background-image: url('/images/arkaplan-cim.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+
+    .cart-item-card {
+        background-color: rgba(255, 255, 255, 0.92);
+        border-left: 5px solid #4CAF50;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+
+        .cart-item-card:hover {
+            transform: scale(1.01);
+        }
+
+    .cart-img {
+        max-height: 80px;
+        border-radius: 6px;
+        object-fit: cover;
+    }
+
+    .btn-green {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+    }
+
+        .btn-green:hover {
+            background-color: #388e3c;
+        }
+
+    .btn-outline-green {
+        border: 1px solid #4CAF50;
+        color: #4CAF50;
+    }
+
+        .btn-outline-green:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    .summary-box {
+        background-color: rgba(233, 251, 233, 0.95);
+        border: 1px solid #c6eac6;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+        .summary-box h5 {
+            color: #388e3c;
+        }
+
+        .summary-box strong {
+            color: #2e7d32;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('tr-TR', {
+                style: 'currency', currency: 'TRY'
+            }).format(amount);
+        }
+
+        // Sepetteki ürünleri ekrana bas
+        function renderCartItems(items) {
+            const container = document.getElementById("cartItemsContainer");
+            container.innerHTML = "";
+            let total = 0;
+
+            items.forEach(item => {
+                const itemTotal = item.productPrice * item.quantity;
+                total += itemTotal;
+
+                const card = document.createElement("div");
+                card.className = "cart-item-card row align-items-center";
+
+                card.innerHTML = `
+                    <div class="col-auto">
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="col-auto">
+                        <img src="${item.imageUrl}" class="cart-img" width="80" height="80" />
+                    </div>
+                    <div class="col-md-4">
+                        <div>
+                            <h6 class="mb-1">${item.productName}</h6>
+                            <p class="text-success fw-bold">${formatCurrency(item.productPrice)}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <button class="btn btn-outline-green btn-sm me-1" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="btn btn-outline-green btn-sm ms-1" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <p class="fw-bold">${formatCurrency(itemTotal)}</p>
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${item.id})">Sil</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById("urunToplami").textContent = formatCurrency(total);
+            document.getElementById("toplamTutar").textContent = formatCurrency(total);
+        }
+
+        // Adet artır/azalt
+        function updateQuantity(id, change) {
+            fetch("/Sepet/GuncelleAdet", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: id, degisim: change })
+            })
+            .then(() => loadCartItems());
+        }
+
+        // Ürün sil
+        function removeItem(id) {
+            fetch("/Sepet/Sil", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: id })
+            })
+            .then(() => loadCartItems());
+        }
+
+        // Sepetteki ürünleri getir
+        function loadCartItems() {
+            fetch("/Sepet/GetCartItems")
+                .then(res => res.json())
+                .then(data => renderCartItems(data));
+        }
+
+        // Sepeti Onayla
+        document.addEventListener("DOMContentLoaded", function () {
+            loadCartItems();
+            document.getElementById("sepetiOnaylaBtn").addEventListener("click", function () {
+                // Yönlendirme: Ödeme ekranın varsa burada değiştir
+                window.location.href = "/Odeme/Odeme";
+            });
+        });
+    </script>
+}

@@ -1,148 +1,257 @@
 ﻿@{
-    Layout = null; // Bu sayfanın kendi layout'u olmayacak
+    Layout = null; // Kendi layout'un varsa ekleyebilirsin
 }
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HAYTİC - Hoş Geldiniz</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Giriş & Kayıt - HAYTİC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         body {
-            background: url('/images/pets-background.jpg') no-repeat center center fixed;
-            background-size: cover;
-            height: 100vh;
+            background: #e6f2e6;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .welcome-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
             padding: 2rem;
         }
 
-        .btn-action {
-            margin: 0.5rem 0;
-            padding: 0.75rem;
-            font-size: 1.1rem;
-            border-radius: 50px;
-            transition: all 0.3s;
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 128, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            background: #fff;
+            padding: 2rem;
         }
 
-            .btn-action i {
-                margin-right: 10px;
-            }
-
-        .btn-skip {
-            background: transparent;
-            color: #6c757d;
-            border: 1px solid #6c757d;
+        h2 {
+            color: #2c662d;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
         }
 
-            .btn-skip:hover {
-                background: #f8f9fa;
+        .btn-primary {
+            background-color: #2c662d;
+            border-color: #2c662d;
+        }
+
+            .btn-primary:hover {
+                background-color: #255522;
+                border-color: #255522;
             }
 
-        .brand-logo {
-            max-height: 80px;
-            margin-bottom: 2rem;
+        .btn-link {
+            color: #2c662d;
+            cursor: pointer;
+        }
+
+            .btn-link:hover {
+                color: #1b3d17;
+                text-decoration: underline;
+            }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c662d;
+        }
+
+        .toggle-link {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .error-message {
+            color: #cc0000;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="welcome-card text-center">
-            <img src="/dist/img/haytic.jpg" alt="HAYTİC Logo" class="brand-logo">
-            <h2 class="mb-4">Evcil Dostunu Bul!</h2>
-            <p class="mb-4">Hayvan sahiplenme ve satış platformuna hoş geldiniz</p>
+    <div class="card">
 
-            <div class="d-grid gap-2">
-                <a href="/kayit/kayit" class="btn btn-primary btn-action">
-                    <i class="fas fa-user-plus"></i> Kaydol
-                </a>
+        <!-- Giriş Formu -->
+        <div id="loginForm">
+            <h2>Giriş Yap</h2>
 
-                <a href="#" class="btn btn-success btn-action" data-toggle="modal" data-target="#loginModal">
-                    <i class="fas fa-sign-in-alt"></i> Giriş Yap
-                </a>
-                <a href="/Anasayfa/Anasayfa" class="btn btn-skip btn-action">
-                    <i class="fas fa-arrow-right"></i> Misafir Olarak Devam Et
-                </a>
-            </div>
-        </div>
-
-        @{
-            ViewData["Title"] = "Ana Sayfa";
-            Layout = "_Layout"; // Layout'unuz neyse onu belirtin
-        }
-
-        <!-- Ana sayfa içeriği burada -->
-        <!-- Giriş Modalı (Index sayfasının en altına ekleyin) -->
-        <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title">
-                            <i class="fas fa-sign-in-alt"></i> Giriş Yap
-                        </h5>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="indexLoginForm">
-                            <div class="form-group">
-                                <label for="indexUsername">Kullanıcı Adı</label>
-                                <input type="text" class="form-control" id="indexUsername" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="indexPassword">Şifre</label>
-                                <input type="password" class="form-control" id="indexPassword" required>
-                            </div>
-                            <div class="form-group text-right">
-                                <a href="#" class="text-success" data-toggle="modal" data-target="#forgotPasswordModal" data-dismiss="modal">
-                                    <i class="fas fa-question-circle"></i> Şifremi Unuttum
-                                </a>
-                            </div>
-                                <button type="submit" class="btn btn-success btn-block">
-                                    <i class="fas fa-sign-in-alt"></i> Giriş Yap
-                                </button>
-                        </form>
-                    </div>
+            @if (!ViewData.ModelState.IsValid && ViewData["Form"]?.ToString() == "Login")
+            {
+                <div class="error-message">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <p>@error.ErrorMessage</p>
+                    }
                 </div>
+            }
+            <form id="loginFormAjax">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Kullanıcı Adı</label>
+                    <input type="text" class="form-control" id="loginUsername" required />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Şifre</label>
+                    <input type="password" class="form-control" id="loginPassword" required />
+                </div>
+                <div id="loginErrors" class="error-message"></div>
+                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+            </form>
+
+            <div class="toggle-link">
+                Henüz üye değil misin? <span class="btn-link" onclick="toggleForms()">Kayıt Ol</span>
             </div>
         </div>
+
+        <!-- Kayıt Formu -->
+        <div id="registerForm" style="display:none;">
+            <h2>Kayıt Ol</h2>
+
+            <div id="registerErrors" class="error-message" style="display:none;"></div>
+
+            <form id="registerFormAjax">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">İsim</label>
+                    <input type="text" class="form-control" id="firstName" required />
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Soyisim</label>
+                    <input type="text" class="form-control" id="lastName" required />
+                </div>
+                <div class="mb-3">
+                    <label for="regUsername" class="form-label">Kullanıcı Adı</label>
+                    <input type="text" class="form-control" id="regUsername" required />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-posta</label>
+                    <input type="email" class="form-control" id="email" required />
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Telefon</label>
+                    <input type="tel" class="form-control" id="phone" />
+                </div>
+                <div class="mb-3">
+                    <label for="birthDate" class="form-label">Doğum Tarihi</label>
+                    <input type="date" class="form-control" id="birthDate" />
+                </div>
+                <div class="mb-3">
+                    <label for="regPassword" class="form-label">Şifre</label>
+                    <input type="password" class="form-control" id="regPassword" required />
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Şifre Tekrar</label>
+                    <input type="password" class="form-control" id="confirmPassword" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
+            </form>
+
+            <div class="toggle-link">
+                Zaten üye misin? <span class="btn-link" onclick="toggleForms()">Giriş Yap</span>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Şifremi Unuttum Modalı -->
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
-        [...Şifremi unuttum modal içeriği...]
-    </div>
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        }
+    </script>
+    <script>
+        document.getElementById("registerFormAjax").addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    @section Scripts {
-        <script>
-            // Sadece bu sayfada çalışacak JS kodları
-            $(document).ready(function() {
-                $('#indexLoginForm').submit(function(e) {
-                    e.preventDefault();
-                    // Giriş işlemleri
-                    console.log("Index sayfasından giriş yapılıyor");
-                });
+            const errorDiv = document.getElementById("registerErrors");
+            errorDiv.innerHTML = "";
+            errorDiv.style.display = "none";
+
+            const password = document.getElementById("regPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                errorDiv.innerHTML = "Şifreler uyuşmuyor.";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            const formData = {
+                FirstName: document.getElementById("firstName").value,
+                LastName: document.getElementById("lastName").value,
+                UserName: document.getElementById("regUsername").value,
+                Email: document.getElementById("email").value,
+                PhoneNumber: document.getElementById("phone").value,
+                BirthDate: document.getElementById("birthDate").value,
+                Password: password,
+                ConfirmPassword: confirmPassword
+            };
+
+            fetch("/Home/Register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    errorDiv.innerHTML = data.errors.join("<br>");
+                    errorDiv.style.display = "block";
+                }
+            })
+            .catch(err => {
+                errorDiv.innerHTML = "Beklenmeyen bir hata oluştu.";
+                errorDiv.style.display = "block";
+                console.error("Kayıt hatası:", err);
             });
-        </script>
-    }
+        });
+    </script>
+    <script>
+        document.getElementById("loginFormAjax").addEventListener("submit", function (e) {
+            e.preventDefault();
 
-    <!-- Bootstrap JS -->
+            const username = document.getElementById("loginUsername").value;
+            const password = document.getElementById("loginPassword").value;
+
+            fetch("/Home/Login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ UserName: username, Password: password })
+            })
+            .then(response => {
+                if (!response.ok) return response.json().then(err => Promise.reject(err));
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirectUrl;
+                }
+            })
+            .catch(error => {
+                const errorDiv = document.getElementById("loginErrors");
+                errorDiv.innerHTML = "";
+                if (error.errors) {
+                    error.errors.forEach(err => {
+                        errorDiv.innerHTML += `<p>${err}</p>`;
+                    });
+                }
+            });
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

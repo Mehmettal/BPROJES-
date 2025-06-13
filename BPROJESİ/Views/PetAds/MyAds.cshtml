@@ -1,0 +1,46 @@
+﻿@model List<BPROJESİ.Models.PetAd>
+
+@{
+    ViewData["Title"] = "İlanlarım";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">İlanlarım</h2>
+    <div class="row g-4">
+        @if (!Model.Any())
+        {
+            <div class="col-12">
+                <div class="alert alert-info">Henüz ilanınız yok.</div>
+            </div>
+        }
+        else
+        {
+            foreach (var ad in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow h-100 ilan-detay-link" data-id="@ad.Id" style="cursor:pointer;">
+                        <img src="@(ad.PhotoPaths?.Split(',')[0] ?? "/images/default.jpg")" class="card-img-top" style="height:220px;object-fit:cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@ad.AdTitle</h5>
+                            <p class="card-text text-muted">@ad.Description?.Substring(0, Math.Min(80, ad.Description.Length))...</p>
+                            <p class="fw-bold">@((ad.Price ?? 0).ToString("N0")) TL</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("click", function (e) {
+            let el = e.target;
+            while (el && !el.classList.contains("ilan-detay-link")) el = el.parentElement;
+            if (el && el.classList.contains("ilan-detay-link")) {
+                let id = el.getAttribute("data-id");
+                window.location.href = "/PetAds/Details/" + id;
+            }
+        });
+    </script>
+}

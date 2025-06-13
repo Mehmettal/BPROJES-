@@ -1,0 +1,159 @@
+﻿@{
+    ViewData["Title"] = "İlan Detayı";
+}
+
+<div class="container py-4">
+    <div id="adDetailContainer" class="row justify-content-center">
+        <div class="col-12 text-center">
+            <div class="spinner-border text-success my-5" role="status"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function getIdFromUrl() {
+            var path = window.location.pathname;
+            var id = path.split('/').pop();
+            return parseInt(id);
+        }
+
+        $(document).ready(function () {
+            var adId = getIdFromUrl();
+
+            $.ajax({
+                url: '/PetAds/GetAdDetails',
+                type: 'GET',
+                data: { id: adId },
+                success: function (response) {
+                    if (!response.success || !response.data) {
+                        $('#adDetailContainer').html('<div class="alert alert-danger">İlan bulunamadı.</div>');
+                        return;
+                    }
+
+                    var ad = response.data;
+                    var currentUserId = '@User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value';
+                    var isOwner = ad.userId === currentUserId;
+                    var photos = ad.photoPaths ? ad.photoPaths.split(',') : [];
+
+                    var html = `
+                        <div class="col-lg-10">
+                            <div class="card shadow-sm p-3" style="font-size:15px;">
+                                <div class="card-header bg-success text-white py-2">
+                                    <h5 class="mb-0">${ad.adTitle}</h5>
+                                </div>
+                                <div class="card-body py-3">
+                                    <div class="row">
+                                        <div class="col-md-5 mb-3 mb-md-0">`;
+
+                    if (photos.length > 0 && photos[0] !== "") {
+                        html += `
+                            <div id="photoCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner rounded-3" style="max-height: 320px; overflow: hidden;">`;
+                        for (let i = 0; i < photos.length; i++) {
+                            html += `
+                                <div class="carousel-item ${i == 0 ? 'active' : ''}">
+                                    <img src="${photos[i]}" class="d-block w-100" style="object-fit:cover; max-height:320px;" />
+                                </div>`;
+                        }
+                        html += `</div>`;
+                        if (photos.length > 1) {
+                            html += `
+                                <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>`;
+                        }
+                        html += `</div>`;
+                    } else {
+                        html += `<img src="/images/default.jpg" class="img-fluid rounded" style="object-fit:cover; max-height:320px;" />`;
+                    }
+
+                    html += `
+                                        </div>
+                                        <div class="col-md-7">
+                                            <table class="table table-bordered table-sm mb-2" style="font-size:14px;">
+                                                <tbody>
+                                                    <tr><th>Hayvan Türü</th><td>${ad.petType || ''}</td></tr>
+                                                    <tr><th>Cins/Irk</th><td>${ad.breed || ''}</td></tr>
+                                                    <tr><th>Cinsiyet</th><td>${ad.gender || ''}</td></tr>
+                                                    <tr><th>Yaş</th><td>${ad.age} Ay</td></tr>
+                                                    <tr><th>Boyut</th><td>${ad.size || ''}</td></tr>
+                                                    <tr><th>Aşılı</th><td>${ad.vaccinated ? "Evet" : "Hayır"}</td></tr>
+                                                    <tr><th>Kısırlaştırılmış</th><td>${ad.sterilized ? "Evet" : "Hayır"}</td></tr>
+                                                    <tr><th>Mikroçipli</th><td>${ad.microchipped ? "Evet" : "Hayır"}</td></tr>
+                                                    <tr><th>Şehir / İlçe</th><td>${ad.city || ''} / ${ad.district || ''}</td></tr>
+                                                    <tr><th>İlan Türü</th><td>${ad.adType || ''}</td></tr>
+                                                    <tr><th>Fiyat</th><td><b>${ad.price && ad.price > 0 ? ad.price.toLocaleString() + " TL" : "Ücretsiz"}</b></td></tr>
+                                                    <tr><th>Telefon</th><td>${ad.contactPhone || ''}</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <div>
+                                                <b>Açıklama:</b>
+                                                <p class="text-muted small" style="min-height:45px;">${ad.description || ''}</p>
+                                            </div>`;
+                    if (isOwner) {
+                        html += `
+                        <div class="d-flex gap-2 mt-2">
+                            <a href="/PetAds/Edit/${ad.id}" class="btn btn-primary btn-sm"><i class="fas fa-edit me-1"></i> Düzenle</a>
+                            <button type="button" class="btn btn-danger" id="deleteBtn">Sil</button>
+
+                        </div>`;
+                    } else {
+                        html += `
+                        <div class="alert alert-info mt-2 py-1 px-2">
+                            Bu ilan size ait değildir.<br>
+                            Soru sormak için <b>${ad.contactPhone || ''}</b> numarasından iletişim kurabilirsiniz.
+                        </div>`;
+                    }
+                    html += `
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    $('#adDetailContainer').html(html);
+
+                    if (photos.length > 1) {
+                        $('#photoCarousel').carousel();
+                    }
+                },
+                error: function () {
+                    $('#adDetailContainer').html('<div class="alert alert-danger">Bir hata oluştu.</div>');
+                }
+            });
+        });
+
+
+
+                $(document).on('click', '#deleteBtn', function () {
+            if (!confirm('İlanı silmek istediğinize emin misiniz?')) return;
+
+            // İlan id'sini al (edit sayfasındaysa input hidden, detaydaysa JS ile çek)
+            var adId = $('#Id').val() || getIdFromUrl();
+
+            $.ajax({
+                url: '/PetAds/DeleteAd',
+                type: 'POST',
+                data: { id: adId },
+                success: function (response) {
+                    if (response.success) {
+                        alert('İlan silindi!');
+                        // İstediğin sayfaya yönlendir (ör. İlanlarım veya Ana Sayfa)
+                        window.location.href = '/PetAds/MyAds';
+                    } else {
+                        alert(response.message || 'Silme işlemi başarısız!');
+                    }
+                },
+                error: function () {
+                    alert('Sunucu hatası.');
+                }
+            });
+        });
+
+
+    </script>
+}
